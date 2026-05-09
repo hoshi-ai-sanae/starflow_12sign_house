@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026年下半期 星の流れビジュアライザー</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Transit visualizer</p>
+      <h1>2026年下半期 星の流れビジュアライザー</h1>
+    </div>
+    <div class="storage-actions" aria-label="保存操作">
+      <button id="saveBtn" type="button">保存</button>
+      <button id="loadBtn" type="button">読み込み</button>
+      <button id="exportBtn" type="button">全データを書き出し</button>
+      <button id="importBtn" type="button">JSONから読み込み</button>
+      <button id="sampleBtn" type="button">サンプルデータを入れる</button>
+      <button id="clearBtn" type="button">入力クリア</button>
+      <input id="importFile" type="file" accept="application/json,.json" hidden>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel input-panel" aria-labelledby="input-title">
+      <div class="section-heading">
+        <h2 id="input-title">クライアント入力</h2>
+        <p id="statusText" class="status-text" role="status"></p>
+      </div>
+
+      <label class="client-name">
+        <span>クライアント名</span>
+        <input id="clientName" type="text" autocomplete="off" placeholder="例：サンプル太郎">
+      </label>
+
+      <section class="client-library" aria-labelledby="client-library-title">
+        <div class="section-heading compact">
+          <h2 id="client-library-title">保存済みクライアント</h2>
+          <span id="clientCount" class="status-text"></span>
+        </div>
+        <p class="storage-hint">書き出したJSONは Dropbox の「星よみ2026下半期データー」フォルダに保存してください。</p>
+        <input id="clientSearch" type="search" autocomplete="off" placeholder="名前で検索">
+        <div id="clientList" class="client-list" role="listbox" aria-label="保存済みクライアント一覧"></div>
+      </section>
+
+      <details open>
+        <summary>出生天体</summary>
+        <div id="natalInputs" class="input-grid"></div>
+      </details>
+
+      <details open>
+        <summary>ハウスカスプ</summary>
+        <div id="houseInputs" class="input-grid house-grid"></div>
+      </details>
+    </section>
+
+    <section class="panel chart-panel" aria-labelledby="chart-title">
+      <div class="section-heading">
+        <h2 id="chart-title">ホロスコープ</h2>
+        <p id="selectedMonthLabel" class="status-text"></p>
+      </div>
+
+      <div id="monthButtons" class="month-buttons" aria-label="月選択"></div>
+
+      <div class="chart-wrap">
+        <svg id="chartSvg" viewBox="0 0 720 720" role="img" aria-label="ホロスコープチャート"></svg>
+      </div>
+
+      <div class="legend">
+        <span><i class="dot natal"></i>出生天体</span>
+        <span><i class="dot start"></i>開始位置</span>
+        <span><i class="dot end"></i>終了位置</span>
+        <span><i class="dot moon"></i>新月・満月</span>
+      </div>
+    </section>
+
+    <section class="panel list-panel" aria-labelledby="list-title">
+      <h2 id="list-title">月別データ一覧</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>天体名</th>
+              <th>開始位置</th>
+              <th>終了位置</th>
+              <th>星座移動日</th>
+              <th>逆行・順行</th>
+              <th>開始ハウス</th>
+              <th>終了ハウス</th>
+              <th>通過ハウス</th>
+            </tr>
+          </thead>
+          <tbody id="transitTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel lunation-panel" aria-labelledby="lunation-title">
+      <h2 id="lunation-title">新月・満月</h2>
+      <div id="lunationList" class="lunation-list"></div>
+    </section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
