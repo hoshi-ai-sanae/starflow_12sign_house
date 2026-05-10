@@ -139,6 +139,10 @@ h2 {
   font-size: 0.9rem;
 }
 
+.print-summary {
+  display: none;
+}
+
 .client-name {
   display: grid;
   gap: 0.3rem;
@@ -400,5 +404,139 @@ tbody tr:last-child td {
 
   button {
     flex: 1 1 auto;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 7mm;
+  }
+
+  :root {
+    --bg: #ffffff;
+    --paper: #ffffff;
+    --paper-2: #ffffff;
+    --shadow: none;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body {
+    min-height: auto;
+    background: #ffffff;
+    font-size: 9.5pt;
+    line-height: 1.25;
+  }
+
+  button,
+  input,
+  select,
+  .app-header,
+  .input-panel,
+  .month-buttons,
+  .legend {
+    display: none !important;
+  }
+
+  .layout {
+    display: block;
+    padding: 0;
+  }
+
+  .panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0 0 4mm;
+    background: #ffffff;
+  }
+
+  .chart-panel {
+    min-height: auto;
+  }
+
+  .print-summary {
+    display: block;
+    margin: 0 0 2.5mm;
+    padding-bottom: 2mm;
+    border-bottom: 1px solid #d8c5ad;
+    color: #2f2923;
+    font-size: 13pt;
+    font-weight: 800;
+  }
+
+  .print-summary:empty {
+    display: none;
+  }
+
+  .section-heading {
+    margin-bottom: 1.5mm;
+  }
+
+  h2 {
+    font-size: 11pt;
+  }
+
+  .status-text {
+    font-size: 10pt;
+  }
+
+  .chart-wrap {
+    width: 100%;
+    max-width: 118mm;
+    height: 118mm;
+    margin: 0 auto;
+  }
+
+  #chartSvg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .table-wrap {
+    overflow: visible;
+    border-radius: 0;
+  }
+
+  table {
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 7.2pt;
+  }
+
+  th,
+  td {
+    padding: 1.2mm 1mm;
+    word-break: break-word;
+  }
+
+  th {
+    white-space: normal;
+  }
+
+  .lunation-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 2mm;
+  }
+
+  .lunation-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 1.8mm;
+  }
+
+  .lunation-card strong {
+    margin-bottom: 0.5mm;
+  }
+
+  .small {
+    font-size: 8pt;
   }
 }
