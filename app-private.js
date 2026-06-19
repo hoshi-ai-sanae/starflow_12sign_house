@@ -10,6 +10,23 @@
   const storageKey = "star-flow-2026-client";
   const clientsStorageKey = "star-flow-2026-clients";
   const wholeSignMonths = ["2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"];
+  const characterAssets = {
+    guide: "assets/private-characters-web/guide.webp",
+    zodiac: {
+      "牡羊座": "assets/private-characters-web/aries.webp",
+      "牡牛座": "assets/private-characters-web/taurus.webp",
+      "双子座": "assets/private-characters-web/gemini.webp",
+      "蟹座": "assets/private-characters-web/cancer.webp",
+      "獅子座": "assets/private-characters-web/leo.webp",
+      "乙女座": "assets/private-characters-web/virgo.webp",
+      "天秤座": "assets/private-characters-web/libra.webp",
+      "蠍座": "assets/private-characters-web/scorpio.webp",
+      "射手座": "assets/private-characters-web/sagittarius.webp",
+      "山羊座": "assets/private-characters-web/capricorn.webp",
+      "水瓶座": "assets/private-characters-web/aquarius.webp",
+      "魚座": "assets/private-characters-web/pisces.webp"
+    }
+  };
   const houseThemes = {
     1: "自分自身・始まり",
     2: "お金・才能・価値観",
@@ -53,7 +70,11 @@
     wholeSignSelect: document.getElementById("wholeSignSelect"), wholeSignMonthSelect: document.getElementById("wholeSignMonthSelect"),
     wholeSignSummary: document.getElementById("wholeSignSummary"), wholeSignChartSvg: document.getElementById("wholeSignChartSvg"),
     wholeSignHouseMap: document.getElementById("wholeSignHouseMap"), wholeSignTableBody: document.getElementById("wholeSignTableBody"),
-    wholeSignLunationList: document.getElementById("wholeSignLunationList")
+    wholeSignLunationList: document.getElementById("wholeSignLunationList"),
+    characterStage: document.getElementById("characterStage"), guideCharacterImage: document.getElementById("guideCharacterImage"),
+    zodiacCharacterImage: document.getElementById("zodiacCharacterImage"), zodiacCharacterName: document.getElementById("zodiacCharacterName"),
+    zodiacCharacterMessage: document.getElementById("zodiacCharacterMessage"), privateModeBtn: document.getElementById("privateModeBtn"),
+    simpleModeBtn: document.getElementById("simpleModeBtn")
   };
 
   function planetList(monthData) {
@@ -138,6 +159,28 @@
       els.wholeSignMonthSelect.append(new Option(monthData ? monthData.label : monthKey, monthKey));
     });
     els.wholeSignMonthSelect.value = selectedWholeSignMonth;
+  }
+
+  function updateCharacterStage() {
+    if (!els.characterStage) return;
+    if (els.guideCharacterImage && !els.guideCharacterImage.src) {
+      els.guideCharacterImage.src = characterAssets.guide;
+    }
+    if (els.zodiacCharacterImage) {
+      els.zodiacCharacterImage.src = characterAssets.zodiac[selectedWholeSign] || "";
+      els.zodiacCharacterImage.alt = `${selectedWholeSign}キャラクター`;
+    }
+    if (els.zodiacCharacterName) els.zodiacCharacterName.textContent = selectedWholeSign;
+    if (els.zodiacCharacterMessage) {
+      els.zodiacCharacterMessage.textContent = `${selectedWholeSign}さんから見た星の流れを表示しています。`;
+    }
+  }
+
+  function setPrivateDisplayMode(mode) {
+    const isSimple = mode === "simple";
+    document.body.classList.toggle("simple-mode", isSimple);
+    if (els.privateModeBtn) els.privateModeBtn.classList.toggle("active", !isSimple);
+    if (els.simpleModeBtn) els.simpleModeBtn.classList.toggle("active", isSimple);
   }
 
   function createPositionInputs(container, items, prefix) {
@@ -656,6 +699,7 @@
     if (!monthData) return;
 
     els.wholeSignSummary.textContent = `${selectedWholeSign}さんから見た ${monthData.label} のホールサインハウス`;
+    updateCharacterStage();
     drawWholeSignChart(monthData);
     renderWholeSignHouseMap();
     els.wholeSignTableBody.innerHTML = "";
@@ -806,11 +850,18 @@
         renderWholeSignTable();
       });
     }
+    if (els.privateModeBtn) {
+      els.privateModeBtn.addEventListener("click", () => setPrivateDisplayMode("private"));
+    }
+    if (els.simpleModeBtn) {
+      els.simpleModeBtn.addEventListener("click", () => setPrivateDisplayMode("simple"));
+    }
   }
 
   buildInputs();
   buildWholeSignControls();
   bindEvents();
+  setPrivateDisplayMode("private");
   setFormData(window.clientSampleData);
   renderClientList();
 })();

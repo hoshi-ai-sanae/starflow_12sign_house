@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>2026年下半期 星の流れビジュアライザー</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>2026年下半期 12星座別 星の流れ 私用モード</title>
+  <link rel="stylesheet" href="styles-private.css">
 </head>
 <body>
   <header class="app-header">
     <div>
       <p class="eyebrow">Transit visualizer</p>
-      <h1>2026年下半期 12星座別 星の流れ</h1>
+      <h1>2026年下半期 12星座別 星の流れ 私用モード</h1>
       <nav class="view-links" aria-label="表示切り替え">
-        <a href="index.html" aria-current="page">ベーシック版</a>
-        <a href="private.html">私用版</a>
+        <a href="index.html">ベーシック版</a>
+        <a href="private.html" aria-current="page">私用版</a>
       </nav>
     </div>
     <div class="storage-actions" aria-label="保存操作">
@@ -36,6 +36,35 @@
           <p class="section-description">あなたの太陽星座を選ぶと、2026年下半期の天体が、あなたにとって何ハウスに入るかを確認できます。</p>
         </div>
       </div>
+
+      <div class="mode-switch" aria-label="表示モード">
+        <button id="privateModeBtn" class="active" type="button">私用モード</button>
+        <button id="simpleModeBtn" type="button">シンプルモード</button>
+      </div>
+
+      <section id="characterStage" class="character-stage" aria-label="キャラクター案内">
+        <article class="character-card guide-character">
+          <div class="character-image-wrap">
+            <img id="guideCharacterImage" alt="案内役キャラクター">
+          </div>
+          <div class="character-copy">
+            <p class="character-role">案内役</p>
+            <h3>星の流れを一緒に見ていきます</h3>
+            <p>太陽星座と月を選ぶと、その星座から見た天体のハウスを表示します。</p>
+          </div>
+        </article>
+
+        <article class="character-card zodiac-character">
+          <div class="character-image-wrap">
+            <img id="zodiacCharacterImage" alt="選択中の星座キャラクター">
+          </div>
+          <div class="character-copy">
+            <p class="character-role">選択中の星座</p>
+            <h3 id="zodiacCharacterName">牡羊座</h3>
+            <p id="zodiacCharacterMessage">牡羊座さんから見た星の流れを表示しています。</p>
+          </div>
+        </article>
+      </section>
 
       <div class="whole-sign-controls" aria-label="ホールサイン一覧の条件選択">
         <label>
@@ -171,7 +200,7 @@
   </main>
 
   <script src="data.js"></script>
-  <script src="app.js"></script>
+  <script src="app-private.js"></script>
   <script>
     (function () {
       function updatePrintSummary() {
