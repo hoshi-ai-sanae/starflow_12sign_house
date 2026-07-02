@@ -68,7 +68,8 @@
     saveBtn: document.getElementById("saveBtn"), loadBtn: document.getElementById("loadBtn"), exportBtn: document.getElementById("exportBtn"), importBtn: document.getElementById("importBtn"),
     importFile: document.getElementById("importFile"), sampleBtn: document.getElementById("sampleBtn"), clearBtn: document.getElementById("clearBtn"),
     wholeSignSelect: document.getElementById("wholeSignSelect"), wholeSignMonthSelect: document.getElementById("wholeSignMonthSelect"),
-    wholeSignSummary: document.getElementById("wholeSignSummary"), wholeSignChartSvg: document.getElementById("wholeSignChartSvg"),
+    wholeSignSummary: document.getElementById("wholeSignSummary"), wholeSignMonthlyMessage: document.getElementById("wholeSignMonthlyMessage"),
+    wholeSignChartSvg: document.getElementById("wholeSignChartSvg"),
     wholeSignHouseMap: document.getElementById("wholeSignHouseMap"), wholeSignTableBody: document.getElementById("wholeSignTableBody"),
     wholeSignLunationList: document.getElementById("wholeSignLunationList"),
     characterStage: document.getElementById("characterStage"), guideCharacterImage: document.getElementById("guideCharacterImage"),
@@ -145,6 +146,50 @@
     const house = wholeSignHouseForSign(pos.sign, selectedWholeSign);
     if (!house) return null;
     return normalize(houseDisplayDegree(house) - (Number(pos.degree) || 0));
+  }
+
+  function houseShortTheme(house) {
+    return houseThemes[house] || "テーマ不明";
+  }
+
+  function planetHousePhrase(planet) {
+    const startHouse = wholeSignHouseForSign(planet.start.sign, selectedWholeSign);
+    const endHouse = wholeSignHouseForSign(planet.end.sign, selectedWholeSign);
+    if (!startHouse || !endHouse) return `${planet.name}はハウス不明`;
+    if (startHouse === endHouse) return `${planet.name}は${startHouse}ハウス（${houseShortTheme(startHouse)}）`;
+    return `${planet.name}は${startHouse}ハウス（${houseShortTheme(startHouse)}）から${endHouse}ハウス（${houseShortTheme(endHouse)}）へ`;
+  }
+
+  function buildMonthlyMessage(monthData) {
+    const planets = monthData.planets || {};
+    const sun = planets.sun;
+    const mercury = planets.mercury;
+    const venus = planets.venus;
+    const mars = planets.mars;
+    const jupiter = planets.jupiter;
+    const saturn = planets.saturn;
+    const sunHouse = sun ? wholeSignHouseForSign(sun.start.sign, selectedWholeSign) : null;
+    const sunEndHouse = sun ? wholeSignHouseForSign(sun.end.sign, selectedWholeSign) : null;
+    const sunTheme = sunHouse && sunEndHouse && sunHouse !== sunEndHouse
+      ? `${houseShortTheme(sunHouse)}から${houseShortTheme(sunEndHouse)}へ意識が移っていく`
+      : `${houseShortTheme(sunHouse)}に光が当たる`;
+    const movementParts = [sun, mercury, venus, mars].filter(Boolean).map(planetHousePhrase);
+    const growthParts = [jupiter, saturn].filter(Boolean).map(planetHousePhrase);
+    const retroNotes = planetList(monthData).filter((planet) => String(planet.motion).includes("retrograde") || (planet.notes || []).length > 0)
+      .slice(0, 3)
+      .map((planet) => `${planet.name}：${motionLabel(planet)}`);
+    const lunationParts = (monthData.lunations || []).map((item) => {
+      const house = wholeSignHouseForSign(item.position.sign, selectedWholeSign);
+      return `${item.label}は${house ? `${house}ハウス（${houseShortTheme(house)}）` : "ハウス不明"}`;
+    });
+
+    return [
+      `${monthData.label}の${selectedWholeSign}さんは、${sunTheme}流れです。`,
+      movementParts.length ? `日々の動きでは、${movementParts.join("、")}。このあたりが今月の体感として出やすくなります。` : "",
+      growthParts.length ? `大きな流れでは、${growthParts.join("、")}。広げたいことと、整えるべき課題の両方を見ながら進む月です。` : "",
+      retroNotes.length ? `見直しポイントは、${retroNotes.join(" / ")}。焦って結論を出すより、立ち止まって調整する時間も味方になります。` : "",
+      lunationParts.length ? `月の節目では、${lunationParts.join("、")}。気持ちの切り替えや満ちるテーマとして意識してみてください。` : ""
+    ].filter(Boolean).join("\n");
   }
 
   function buildWholeSignControls() {
@@ -699,6 +744,7 @@
     if (!monthData) return;
 
     els.wholeSignSummary.textContent = `${selectedWholeSign}さんから見た ${monthData.label} のホールサインハウス`;
+    if (els.wholeSignMonthlyMessage) els.wholeSignMonthlyMessage.textContent = buildMonthlyMessage(monthData);
     updateCharacterStage();
     drawWholeSignChart(monthData);
     renderWholeSignHouseMap();

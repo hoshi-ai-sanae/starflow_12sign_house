@@ -522,6 +522,27 @@ tbody tr:last-child td {
   font-weight: 800;
 }
 
+.monthly-message-panel {
+  margin: 0 0 1rem;
+  border: 1px solid #e5cfaa;
+  border-radius: 8px;
+  padding: 0.9rem;
+  background: rgba(255, 253, 248, 0.86);
+}
+
+.monthly-message-panel h3 {
+  margin: 0 0 0.55rem;
+  color: #5b4431;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.monthly-message {
+  white-space: pre-line;
+  color: var(--ink);
+  line-height: 1.75;
+}
+
 .whole-sign-chart-panel {
   margin: 0 0 1rem;
   border: 1px solid #e5cfaa;
